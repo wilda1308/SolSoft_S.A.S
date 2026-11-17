@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solsoft S.A.S. - Network Analytics</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="shortcut icon" href="Assets/images/logos/logoSolsoftSAS.svg" type="image/x-icon">
+    <!-- Librería para hacer gráficas con área bajo la curva (integrales)-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Librería para renderizar fórmulas matemáticas elegantes en formato LaTeX -->
+    <script>
+        window.MathJax ={
+            tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Bootstrp icons para iconos de ocultar panel y mostrar panel -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="sidebarOverlay" class="sidebar-overleay"></div>
+
+    <!-- BARRA LATERAL (Sidebar de configuración) -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>configuración</h2>
+            <!-- BOTÓN PARA OCULTAR (DENTRO DE LA BARRA LATERAL) -->
+            <i id="closeSidebarBtn" class="bi bi-x-lg" title="Ocultar barra lateral" src=""></i>
+        </div>
+
+        <div class="form-group">
+            <label for="csvFileInput">Cargar CSV de Red</label>
+            <input type="file" name="csvFile" id="csvFileInput" accept=".csv">
+        </div>
+
+        <div class="form-group">
+            <label for="metodoSelect">Método de Integración</label>
+            <select name="integrationMethod" id="metodoSelect">
+                <option value="todos">Comparar ambos</option>
+                <option value="tfc">Teorema Fundamental del Cálculo (Trapecios)</option>
+                <option value="riemann">Sumas de Riemann (Punto Medio)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="isPlanRange">Escala /Factor de Tráfico: <strong id="ispPlanValue">100% capacidad</strong></label>
+            <input type="range" id="isPlanRange" min="0.1" max="2.00" value="1.00" step="0.1">
+        </div>
+
+        <div class="info-box">
+            <strong>Formatos soportados:</strong><br>
+            Separadores por coma (<code>,</code>) o punto y coma (<code>;</code>).<br>
+            Columnas: <code>tiempo_horas</code>, <code>tasa_kbs</code>.
+        </div>
+    </aside>
+
+    <!-- CONTENIDO PRINCIPAL (Dashboard con Pestañas) -->
+    <main class="main-content">
+        <header class="header">
+            <div class="header-top">
+                <i id="toggleSidebarMain" class="bi bi-box-arrow-right" title="Mostrar configuración"></i>
+                <div class="cont-proyecto-name">
+                <img src="Assets/images/logos/logoSolsoftSAS.svg" alt="Logo SolSoft S.A.S." width="110" height="80">
+                <h1>Sol<span class="degrade">Soft</span> S.A.S. Network Analytics</h1>
+                </div>
+            </div>
+            <p>Aplicación empresarial de cálculo integral para el consumo de ancho de banda y análisis de horas críticas de colapso en la red empresarial.</p>
+        </header>
+
+        <!-- NAVEGACIÓN POR PESTAÑAS -->
+
+        <nav class="tabs-nav">
+            <button class="tab-link active" onclick="openTab(event, 'resumen')">Resumen Resultados</button>
+            <button class="tab-link" onclick="openTab(event, 'analisis')">Análisis Integral</button>
+            <button class="tab-link" onclick="openTab(event, 'datos')">Datos (CSV)</button>
+            <button class="tab-link" onclick="openTab(event, 'conclusiones')">Solución y VLANs</button>
+        </nav>
+
+        <!-- PESTAÑA 1:RESUMEN RED EMPRESARIAL (ACTUAL) -->
+
+        <section id="resumen" class="tab-panel active">
+            <div>
+                <p id="kpiMetodoBadge" class="method-badge">Método activo: Trapecios (base de Comparación)</p>
+                <div class="metric-grid">
+                    <div class="metric-card">
+                        <span class="metric-label">Tráfico total Diario</span>
+                        <span class="metric-value" id="kpiTotalGbDiario">1070.51 MB</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Tráfico total Mensual</span>
+                        <span class="metric-value" id="kpiTotalGbMensual">23.00 GB</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Tasa Promedio de Consumo</span>
+                        <span class="metric-value" id="kpiPromedio">30.45 KB/s</span>
+                    </div>
+                    <div class="metric-card">
+                        <span class="metric-label">Hora Crítica (Máximo Consumo)</span>
+                        <span class="metric-value text-alert" id="kpiHoraCritica">7:00 h (53.50 KB/s)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3>Tasa de Consumo $D(t)$ y Área Bajo la curva (Jornada de 10 horas)</h3>
+                <canvas id="trafficChart"></canvas>
+            </div>
+        </section>
+
+        <!-- PESTAÑA 2: ANÁLISIS INTEGRAL -->
+         <section id="analisis" class="tab-panel">
+            <h2>Comparación de Método Matemáticos de Integrales</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Método Númerico / Análitico</th>
+                        <th>Volumen Diario (MB)</th>
+                        <th>Proyección Mensual</th>
+                        <th>Diferencia Relativa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="rowTfc">
+                        <td>Teorema Fundamental del Cálculo / Trapecios</td>
+                        <td id="valTfc">1,054.69 MB</td>
+                        <td id="valTfcMes">22.66 GB</td>
+                        <td>0.00% (Base)</td>
+                    </tr>
+                    <tr id="rowRiemann">
+                        <td>Sumas de Riemman (Punto Medio, $n=5$)</td>
+                        <td id="valRiemann">1,072.26 MB</td>
+                        <td id="valRiemannMes">23.05 GB</td>
+                        <td id="difRiemann">+1.66%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="math-card">
+                <h3>Interpretación Mátematica del Problema</h3>
+                <p>El volumen diario acumulado $V_{\text{diario}}$ equivale a la integral definida de la función de velocidad $D(t)$ [en $\text{KB/s}$] multiplicada por 3600 segundos:</p>
+                <p class="formula">$$V_{\text{diario (KB)}} = 3600 \cdot \int_{0}^{10} \left( -0.5t^3 + 6t^2 - 12t + 15 \right) dt$$</p>
+                <p>Para estimar el consumo acumulado en un mes laboral comercial de 22 días hábiles:</p>
+                <p class="formula">$$V_{\text{mensual (GB)}} = \frac{V_{\text{diario (KB)}} \times 22}{1024} \approx 22.66 \text{GB/mes}$$</p>
+            </div>
+         </section>
+
+         <!-- PESTAÑA 3: DATOS -->
+          <section id="datos" class="tab-panel">
+            <div class="header-datos">
+                <h2>Tabla de Datos Registrados (consumo_solsoft.csv)</h2>
+                <a class="btn-descargar" href="consumo_solsoft.csv" download="">Descargar consumo_solsoft.csv</a>
+            </div>
+            
+            <div id="tableContainer">
+            </div>
+          </section>
+          
+          <!-- PESTAÑA 4: CONCLUSIONES-->
+           <section id="conclusiones" class="tab-panel">
+                <h2>Recomendaciones e Ingeniería de Red</h2>
+                <div class="recommendation-box">
+                    <p><strong>Diagnostico:</strong> En las horas pico $t \in [5, 8]$ (1:00 p.m. a 4:00 p.m.) el tráfico alcanza velocidades de hasta <strong>53.5 KB/s (0.43 Mbps)</strong>, lo cual genera colas de latencia en la red monolítica actual de Solsoft.</p>
+                </div>
+                <div class="vlan-grid">
+                    <div class="vlan-card">
+                        <h4>VLAN 1: Hosting & Web</h4>
+                        <p>Prioridad QoS (Quality of Service) Alta. Garantiza disponibilidad continua de servidores web y API de clientes.</p>
+                    </div>
+                    <div class="vlan-card">
+                        <h4>VLAN 2: Desarrolladores</h4>
+                        <p>Aislamiento de descargas de dependencias, entornos Docker y repositorios de código.</p>
+                    </div>
+                    <div class="vlan-card">
+                        <h4>VLAN 3: Administración</h4>
+                        <p>Tráfico administrativo, correo electrónico y herramientas colaborativas corporativas.</p>
+                    </div>
+                </div>
+                <img src="" alt="">
+           </section>
+    </main>
+
+    <script src="javaScript/app.js"></script>
+</body>
+</html>

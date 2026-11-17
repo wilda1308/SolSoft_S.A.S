@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="80 100 604 440"
+   width="604"
+   height="440"
+   role="img"
+   aria-label="SolSoft S.A.S. - Desarrollo de Software"
+   version="1.1"
+   id="svg41"
+   sodipodi:docname="logoSolsoftSAS.svg"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview41"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="0.97159091"
+     inkscape:cx="157.47368"
+     inkscape:cy="176.51462"
+     inkscape:window-width="1920"
+     inkscape:window-height="1057"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg41" />
+  <title
+     id="title1">SolSoft S.A.S. - Desarrollo de Software</title>
+  <defs
+     id="defs34">
+    <linearGradient
+       id="gm"
+       gradientUnits="userSpaceOnUse"
+       x1="113.21638"
+       y1="-99.894737"
+       x2="-102.92397"
+       y2="98.865494"
+       spreadMethod="pad">
+      <stop
+         offset="0.00010002"
+         stop-color="#0A9BFF"
+         id="stop6"
+         style="stop-color:#5bf55a;stop-opacity:1;" />
+      <stop
+         offset="0.1901928"
+         stop-color="#0A6CFF"
+         id="stop5" />
+      <stop
+         offset="0.53594434"
+         stop-color="#00C4FF"
+         id="stop4" />
+      <stop
+         offset="0.79773414"
+         stop-color="#0A6CFF"
+         id="stop3" />
+      <stop
+         offset="0.9999"
+         stop-color="#0A9BFF"
+         id="stop2"
+         style="stop-color:#5bf55a;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       id="g1"
+       gradientUnits="userSpaceOnUse"
+       x1="10"
+       y1="-150"
+       x2="-114"
+       y2="0">
+      <stop
+         offset="0"
+         stop-color="#00D4FF"
+         id="stop8" />
+      <stop
+         offset=".55"
+         stop-color="#008CFF"
+         id="stop9" />
+      <stop
+         offset="1"
+         stop-color="#005BFF"
+         id="stop10" />
+    </linearGradient>
+    <linearGradient
+       id="g2"
+       gradientUnits="userSpaceOnUse"
+       x1="-125"
+       y1="-34"
+       x2="125"
+       y2="34">
+      <stop
+         offset="0"
+         stop-color="#0A6CFF"
+         id="stop11" />
+      <stop
+         offset=".5"
+         stop-color="#00D4FF"
+         id="stop12" />
+      <stop
+         offset="1"
+         stop-color="#009BFF"
+         id="stop13" />
+    </linearGradient>
+    <linearGradient
+       id="g3"
+       gradientUnits="userSpaceOnUse"
+       x1="106"
+       y1="-10"
+       x2="-30"
+       y2="150">
+      <stop
+         offset="0"
+         stop-color="#005BFF"
+         id="stop14" />
+      <stop
+         offset=".55"
+         stop-color="#008CFF"
+         id="stop15" />
+      <stop
+         offset="1"
+         stop-color="#00D4FF"
+         id="stop16" />
+    </linearGradient>
+    <linearGradient
+       id="gw1"
+       gradientUnits="userSpaceOnUse"
+       x1="106"
+       y1="-66"
+       x2="30"
+       y2="-110">
+      <stop
+         offset="0"
+         stop-color="#0E9F63"
+         id="stop17" />
+      <stop
+         offset="1"
+         stop-color="#4DF58A"
+         id="stop18" />
+    </linearGradient>
+    <linearGradient
+       id="gw2"
+       gradientUnits="userSpaceOnUse"
+       x1="-106"
+       y1="66"
+       x2="-30"
+       y2="110">
+      <stop
+         offset="0"
+         stop-color="#0E9F63"
+         id="stop19" />
+      <stop
+         offset="1"
+         stop-color="#4DF58A"
+         id="stop20" />
+    </linearGradient>
+    <linearGradient
+       id="gBr"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="1">
+      <stop
+         offset="0"
+         stop-color="#F2F5F9"
+         id="stop21" />
+      <stop
+         offset="1"
+         stop-color="#A9B3C1"
+         id="stop22" />
+    </linearGradient>
+    <linearGradient
+       id="gSol"
+       x1="0"
+       y1="0"
+       x2="0"
+       y2="1">
+      <stop
+         offset="0"
+         stop-color="#FFFFFF"
+         id="stop23" />
+      <stop
+         offset="1"
+         stop-color="#C5CFDD"
+         id="stop24" />
+    </linearGradient>
+    <linearGradient
+       id="gSoft"
+       gradientUnits="userSpaceOnUse"
+       x1="1073"
+       y1="0"
+       x2="1559"
+       y2="0">
+      <stop
+         offset="0"
+         stop-color="#0A9BFF"
+         id="stop25" />
+      <stop
+         offset=".3"
+         stop-color="#00D4FF"
+         id="stop26" />
+      <stop
+         offset=".62"
+         stop-color="#00CFC3"
+         id="stop27" />
+      <stop
+         offset="1"
+         stop-color="#5BF55A"
+         id="stop28" />
+    </linearGradient>
+    <linearGradient
+       id="gL"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0">
+      <stop
+         offset="0"
+         stop-color="#005BFF"
+         id="stop29" />
+      <stop
+         offset="1"
+         stop-color="#00D4FF"
+         id="stop30" />
+    </linearGradient>
+    <linearGradient
+       id="gR"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="0">
+      <stop
+         offset="0"
+         stop-color="#00CFC3"
+         id="stop31" />
+      <stop
+         offset="1"
+         stop-color="#36E878"
+         id="stop32" />
+    </linearGradient>
+    <radialGradient
+       id="gRef"
+       cx=".5"
+       cy=".5"
+       r=".5">
+      <stop
+         offset="0"
+         stop-color="#00B4FF"
+         stop-opacity=".45"
+         id="stop33" />
+      <stop
+         offset="1"
+         stop-color="#00B4FF"
+         stop-opacity="0"
+         id="stop34" />
+    </radialGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#gm"
+       id="linearGradient42"
+       x1="-110.32152"
+       y1="86.192612"
+       x2="110.32152"
+       y2="-86.192612"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <rect
+     x="80"
+     y="100"
+     width="604"
+     height="440"
+     rx="56"
+     fill="#05090f"
+     id="rect34"
+     style="display:none" />
+  <g
+     transform="translate(382,320)"
+     id="g40">
+    <ellipse
+       cx="0"
+       cy="206"
+       rx="150"
+       ry="20"
+       fill="url(#gRef)"
+       id="ellipse34" />
+    <clipPath
+       id="hx">
+      <polygon
+         points="0.0,-174.0 140.0,-92.0 140.0,92.0 0.0,174.0 -140.0,92.0 -140.0,-92.0"
+         id="polygon34" />
+    </clipPath>
+    <g
+       clip-path="url(#hx)"
+       id="g39">
+      <polyline
+         points="106.0,-66.0 0.0,-132.0 -106.0,-66.0 -106.0,-34.0 106.0,34.0 106.0,66.0 0.0,132.0 -106.0,66.0"
+         fill="none"
+         stroke="url(#gm)"
+         stroke-width="68"
+         stroke-linejoin="round"
+         stroke-linecap="butt"
+         id="polyline34"
+         style="fill:none;fill-opacity:1;stroke:url(#linearGradient42)" />
+      <g
+         stroke="#fff"
+         stroke-width="2.4"
+         stroke-linecap="round"
+         fill="none"
+         opacity=".28"
+         id="g38" />
+    </g>
+  </g>
+  <polygon
+     points="188,214 225,214 137,310 225,406 188,406 100,310"
+     fill="url(#gBr)"
+     stroke="url(#gBr)"
+     stroke-width="3"
+     stroke-linejoin="round"
+     id="polygon40" />
+  <polygon
+     points="576,214 539,214 627,310 539,406 576,406 664,310"
+     fill="url(#gBr)"
+     stroke="url(#gBr)"
+     stroke-width="3"
+     stroke-linejoin="round"
+     id="polygon41" />
+</svg>
