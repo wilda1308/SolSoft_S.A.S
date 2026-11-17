@@ -1,7 +1,9 @@
 <p align="center">
-  <img src="Assets/images/logos/logotipoSolsoftSAS.svg"
+  <a href ="https://wilda1308.github.io/SolSoft_S.A.S">
+    <img src="Assets/images/logos/logotipoSolsoftSAS.svg"
        alt="Logo SolSoft S.A.S."
-       width="350">
+       width="350"> 
+  </a>
 </p>
 
 # SolSoft S.A.S. – Network Analytics
