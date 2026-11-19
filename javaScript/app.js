@@ -42,17 +42,8 @@ function setupIspRangeListener(){
 
     if(rangeInput && rangeValueLabel){
         rangeInput.addEventListener('input', function(e){
-            const horaCritica = document.getElementById('kpiHoraCritica');
-            const factor = parseFloat(e.target.value);
-            rangeValueLabel.innerText = `${(factor * 100).toFixed(0)}% capacidad`;
+            rangeValueLabel.innerHTML = `${parseFloat(e.target.value).toFixed(0)} % de reducción`;
             calcularYActualizar(currentHoras, currentTasas);
-            if(factor <= 2 && factor > .8){
-                rangeValueLabel.classList.add('text-alert');
-                horaCritica.classList.add('text-alert');
-            }else{
-                rangeValueLabel.classList.remove('text-alert');
-                horaCritica.classList.remove('text-alert');
-            }
         });
     }
 }
@@ -181,22 +172,22 @@ function calcularYActualizar(horas, tasas){
     currentHoras = horas;
     currentTasas = tasas
 
-    //Calcular factor multiplicador del slider
+    //Slider: % de reducción de tráfico pormedio de VLANs (0 - 50%)
     const rangeInput = document.getElementById('isPlanRange');
-    const factor  = rangeInput? parseFloat(rangeInput.value) : 1.0;
+    const reduccion = (rangeInput ? parseFloat(rangeInput.value) : 0) / 100;
+    const factor = 1 - reduccion;
 
-    //Aplicar factor a la tasa de consumo
-    const tasasAjustadas = tasas.map(t => t * factor);
+    //Tráfico optimizado  = tráfico actual * (1 - reduccion). El tráfico actual NO cambia.
+    const tasasOpt = tasas.map(t  => t * factor);
     
-
     //1. Trapecios
-    const sumaTrapecio = integrarTrapecios(horas, tasasAjustadas);
+    const sumaTrapecio = integrarTrapecios(horas, tasas);
     const tfcMb = (sumaTrapecio * 3600) / 1024;
     const tfcGb = tfcMb / 1024;
     const mensualGb = tfcGb * 22;
 
     //2. Riemann punto medio
-    const sumaRiemann = integrarRiemannMedio(horas, tasasAjustadas);
+    const sumaRiemann = integrarRiemannMedio(horas, tasas);
     const riemannMb = (sumaRiemann * 3600) / 1024;
     const riemannGb = riemannMb / 1024;
     const riemannMensualGb = riemannGb * 22;
@@ -211,14 +202,32 @@ function calcularYActualizar(horas, tasas){
 
     //KPIs
     const promedioKbs = sumaActiva / (horas[horas.length - 1] - horas[0]);
-    const maxTasa = Math.max(...tasasAjustadas);
-    const maxHora = horas[tasasAjustadas.indexOf(maxTasa)];
+    const maxTasa = Math.max(...tasas);
+    const maxHora = horas[tasas.indexOf(maxTasa)];
+    const maxTasaOpt = maxTasa * factor;
 
     document.getElementById('kpiTotalGbDiario').innerHTML = `${mbActivo.toFixed(2)} MB`;
     document.getElementById('kpiTotalGbMensual').innerHTML = `${mensualActivo.toFixed(2)} GB`;
     document.getElementById('kpiPromedio').innerHTML = `${promedioKbs.toFixed(2)} KB/s`;
-    document.getElementById('kpiHoraCritica').innerHTML = `${maxHora}:00 h (${maxTasa.toFixed(2)} KB/s)`;
+    document.getElementById('kpiHoraCritica').innerHTML = `${maxHora}:00 h (${maxTasaOpt.toFixed(2)} KB/s)`;
 
+
+    //KPIs de optimización (por linealidad: /integral K*D = K . /integral D)
+    const optMb = mbActivo * factor;
+    document.getElementById('kpiOptimizado').innerHTML = `${optMb.toFixed(2)} MB`;
+    document.getElementById('kpiAhorro').innerHTML = `${(mbActivo - optMb).toFixed(2)} MB (${(reduccion * 100).toFixed(0)} %)`;
+
+    //Alerta visual: 
+    const critico = reduccion <= 0.2;
+
+    const lblSlider = document.getElementById('ispPlanValue');
+    const kpiHora = document.getElementById('kpiHoraCritica');
+    const kpiOptimizado = document.getElementById('kpiOptimizado');
+    const kpiAhorro = document.getElementById('kpiAhorro');
+    
+    [lblSlider, kpiHora, kpiOptimizado, kpiAhorro].forEach( el => {
+        if(el) el.classList.toggle('text-alert', critico)
+    });
 
     const badge = document.getElementById('kpiMetodoBadge');
     if(badge) badge.innerHTML = `Método activo: ${nombreMetodo}`
@@ -236,7 +245,8 @@ function calcularYActualizar(horas, tasas){
     document.getElementById('rowTfc').style.display = (metodo === 'riemann') ? 'none' : '';
     document.getElementById('rowRiemann').style.display = (metodo === 'tfc') ? 'none' : '';
 
-    renderChart(horas, tasasAjustadas, tasas);
+    renderChart(horas, tasasOpt, tasas, reduccion);
+    renderChartAcumulado(horas, tasas, tasasOpt, reduccion);
 }
 
 function renderTablaDatos(horas, tasas){
@@ -265,7 +275,11 @@ function renderTablaDatos(horas, tasas){
     document.getElementById('tableContainer').innerHTML = tableHtml;
 }
 
-function renderChart(labels, tasasAjustadas, data){
+function colorOptimizado(reduccion){
+    return reduccion <= 0.2? '#FF4B4B' : '#42FF42';
+}
+
+function renderChart(labels, tasasAjustadas, data, reduccion){
     const ctx = document.getElementById('trafficChart').getContext('2d');
 
     if(myChart){
@@ -275,20 +289,20 @@ function renderChart(labels, tasasAjustadas, data){
     myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: labels.map(h => `Hora ${h}`),
+            labels: labels.map(h => `${h}`),
             datasets: [
                 {
-                    label: 'Vólumen de consumo / Integral V(t)',
+                    label: 'Optimizado (VLANs) [KB/s]',
                     data: tasasAjustadas,
                     fill: false,
-                    borderColor: '#42FF42',
+                    borderColor: colorOptimizado(reduccion),
                     borderWidth: 2,
                     pointRadius: 0,
                     borderDash: [4, 4],
-                    tension: 0.3                     
+                    tension: 0.3
                 },
                 {
-                    label: 'Función tasa de consumo D(t) [KB/s]',
+                    label: 'Función Tráfico Actual D(t) [KB/s]',
                     data: data,
                     fill: true,
                     borderColor: '#0062FF',
@@ -306,8 +320,99 @@ function renderChart(labels, tasasAjustadas, data){
                 legend:{labels:{color: '#ffffff'}}
             },
             scales:{
-                x: {ticks: {color:'#8b949e'}, grid: {color: '#30363d'}},
-                y: {ticks: {color: '#8b949e'},grid: {color: '#30363d'}}
+                x: {
+                    ticks: {color:'#8b949e'}, grid: {color: '#30363d'}, 
+                    title: {display: true, text: 'Tiempo (Horas)', color: '#8b949e'}},
+                y: {
+                    ticks: {color: '#8b949e'},grid: {color: '#30363d'}, 
+                    title: {display: true, text: 'Tasa de consumo (KB/s)', color: '#8b949e'}}
+            }
+        }
+    });
+}
+
+let accumChart;
+
+//MB Acumulados desde t = 0, hora a hora (Trapecios)
+function calcularAcumulado(horas, tasas){
+    const acumulado = [0];
+    for(let i = 1; i < horas.length; i++){
+        const areaKb = ((tasas[i - 1] + tasas[i]) / 2) * (horas[i] - horas[i - 1]) * 3600;
+        acumulado.push(acumulado[i - 1] + areaKb / 1024);
+    }
+    return acumulado;
+}
+
+function renderChartAcumulado(horas, tasas, tasasOpt, reduccion){
+    const canvas = document.getElementById('accumChart');
+    if(!canvas) return;
+
+    const acumulado = calcularAcumulado(horas, tasas);
+    const acumOpt = calcularAcumulado(horas, tasasOpt);
+    const puntos = horas.map((h, i) => ({x: h, y: acumulado[i]}));
+    const puntosOpt = horas.map((h, i) => ({x: h, y: acumOpt[i]}));
+    const total = acumulado[acumulado.length - 1];
+    const totalOpt = acumOpt[acumOpt.length - 1];
+
+    if(accumChart) accumChart.destroy();
+
+    accumChart = new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: { datasets: [{
+            label: 'Tráfico acumulado (MB)',
+            data: puntos,
+            borderColor: '#0062FF',
+            backgroundColor: 'rgba(0, 98, 255, 0.18)',
+            fill: true,
+            borderWidth: 3,
+            pointRadius: 3,
+            pointBackgroundColor: '#0062FF',
+            tension: 0.25
+        },
+        {
+            label: 'Optimizado con VLANs (MB)',
+            data: puntosOpt,
+            borderColor: colorOptimizado(reduccion),
+            fill: false,
+            borderWidth: 2,
+            borderDash: [5, 5],
+            pointRadius: 0,
+            tension: 0.25
+        }
+    ]},
+        options: {
+            responsive: true,
+            aspectRatio: window.innerWidth < 600 ? 1.3 : 2.6,
+            plugins: {
+                legend: { labels: { color: '#ffffff'}},
+                title: { display: true, text: 'Volumen Acumulado (Megabytes)', color: "#FFF", font: { size: 16}},
+                subtitle: {display: true, text: `Total de la jornada: ${total.toFixed(2)} MB actual · ${totalOpt.toFixed(2)} MB optimizado`, color: '#8b949e'},
+                tooltip: { callbacks: {
+                    title: items => `Hora ${items[0].parsed.x}`,
+                    label: item => `${item.parsed.y.toFixed(2)} MB acumulados`
+                }}
+            },
+            scales: {
+                x: { 
+                    type: 'linear', 
+                    min: horas[0], 
+                    max: horas[horas.length - 1],
+                    title: {
+                        display: true, text: 'Tiempo (Horas)', 
+                        color: '#8b949e'},
+                    ticks: { 
+                        color: '#8b949e', 
+                        stepSize: 1}, 
+                    grid: { color: '#30363d'}},
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true, 
+                        text: 'Tráfico Acumulado (MB)', 
+                        color: '#8b949e'},
+                    ticks: { 
+                        color: '#8b949e'}, 
+                    grid: { color:'#30363d'}}
             }
         }
     });

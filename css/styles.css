@@ -321,12 +321,13 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
     transition: color .3s ease;
 }
 
-.metric-value:not(.text-alert)#kpiHoraCritica{
+.metric-value:not(.text-alert)#kpiHoraCritica,.metric-value:not(.text-alert)#kpiAhorro, .metric-value:not(.text-alert)#kpiOptimizado{
     color: #4bff4b;
 }
 
 .text-alert{
     color: #ff4b4b;
+    transition: color .5s ease;
 }
 
 .chart-container{
@@ -335,6 +336,10 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
     border-radius: 8px;
     padding: 20px;
     max-width: 100%;
+}
+
+.chart-acumulado{
+    margin-top: 25px;
 }
 
 #tableContainer{
@@ -402,7 +407,8 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
     background: linear-gradient(90deg, #00d4ff, #00cfc3, #36e878);
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
+    color: #00cfc3;
+    -webkit-text-fill-color: transparent;
     font-weight: bold;
 }
 
