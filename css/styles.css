@@ -4,7 +4,33 @@
     margin: 0;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    scrollbar-width: thin;
+    scrollbar-color: #00cfc3 #202832;
 }
+
+*::-webkit-scrollbar{
+    width: 7px;
+    height: 7px;
+}
+
+*::-webkit-scrollbar-track{
+    background: #161b22;
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb{
+    background: linear-gradient(
+        180deg,
+        #00d4ff,
+        #00cfc3
+    );
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb:hover{
+    background: #36e878;
+}
+
 
 body{
     display: flex;
@@ -30,17 +56,12 @@ body{
     transition: opacity 0.3s ease;
 }
 
-.sidebar-overlay.active{
-    display: block;
-    opacity: 1;
-}
-
 #ispPlanValue:not(.text-alert){
     color: #4bff4b;
 }
 
 .sidebar{
-    width: 280px;
+    width: 350px;
     flex-shrink: 0;
     background-color: #161b22;
     border-right: 1px solid #30363d;
@@ -50,7 +71,7 @@ body{
 }
 
 .sidebar.collapsed{
-    margin-left: -280px;
+    margin-left: -350px;
 }
 
 .sidebar-header{
@@ -190,9 +211,11 @@ code{
 
 .main-content{
     flex: 1;
+    width: 0;
+    min-width: 0;
     padding: 30px;
     overflow-y: auto;
-    width: 100%;
+    max-width: 100%;
     transition: padding-left 0.3s ease;
 }
 
@@ -256,16 +279,21 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
+    width: 100%;
+    min-width: 0;
     border-top: 1px solid #30363d;
     margin-bottom: 25px;
 }
 
 .tab-link{
+    flex: 0 1 auto;
+    min-width: 0;
     background: none;
     border: none;
     color: #8b949e;
-    padding: 12px 20px;
-    font-size: 0.95rem;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    white-space: normal;
     cursor: pointer;
     border-bottom: 2px solid transparent;
     transition: 0.2s;
@@ -283,6 +311,9 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
 
 .tab-panel{
     display: none;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .tab-panel.active{
@@ -291,11 +322,55 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
 
 .metric-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
     gap: 20px;
     margin-bottom: 25px;
-    align-items: center;
-    justify-items: center;
+    align-items: stretch;
+    width: 100%;
+    min-width: 0;
+}
+
+.metric-card{
+    min-width: 0;
+    width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.metric-value{
+    display: block;
+    font-size: clamp(1.2rem, 3vw, 1.8rem);
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.chart-container{
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 20px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.chart-acumulado{
+    margin-top: 25px;
+}
+
+.chart-box{
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    height: clamp(280px, 55vw, 400px);
+}
+
+.chart-box canvas{
+    display: block;
+    width: 100% !important;
+    max-width: 100%;
+    height: 100% !important;
 }
 
 .metric-card{
@@ -330,18 +405,6 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
     transition: color .5s ease;
 }
 
-.chart-container{
-    background-color: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 8px;
-    padding: 20px;
-    max-width: 100%;
-}
-
-.chart-acumulado{
-    margin-top: 25px;
-}
-
 #tableContainer{
     overflow-x: auto;
     margin-top: 15px;
@@ -372,14 +435,29 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
 .header-datos{
     margin: 20px auto;
     display: flex;
-    align-items: last baseline;
+    align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    min-width: 0;
+}
+
+.header-datos h2{
+    min-width: 0;
+    overflow-wrap: break-word;
+    font-size: clamp(1rem, 2.3vw, 1.4rem);
+    overflow: hidden;
 }
 
 .header-datos a{
+    display: inline-block;
+    max-width: 100%;
+    margin-right: 0;
+    overflow-wrap: anywhere;
     background-color: #0062ff;
     cursor: pointer;
-    padding: 15px;
+    padding-inline: 2vw;
+    padding-block: 20px;
     text-align: center;
     border: 1px solid #58a6ff;
     border-radius: 30vw;
@@ -390,6 +468,15 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
     color: #f0f6fc;
 }
 
+#tableContainer{
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #00cfc3 #202832;
+}
 
 .math-card, .recommendation-box{
     background-color: #161b22;
@@ -397,13 +484,91 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
     border-radius: 8px;
     padding: 20px;
     margin-top: 20px;
+
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.math-card h3, .math-card p{
+    overflow-wrap: break-word;
+}
+
+.math-card h3{
+    margin-bottom: 15px;
+}
+
+.table-scroll{
+    width: 100%;
+    max-width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
+
+    border-radius: 8px;
+    margin-top: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: #00cfc3 #202832;
+}
+
+.table-scroll .data-table{
+    width: 100%;
+    min-width: 600px;
+    margin-top: 0;
+}
+
+#analisis{
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+#analisis h2{
+    overflow-wrap: break-word;
+}
+
+#analisis .math-card, #analisis .chart-container{
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.formula-scroll{
+    container-type: inline-size;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding: 12px 10px;
+    margin: 15px 0;
+
+    background-color: #111820;
+    border: 1px solid #26343d;
+    border-radius: 8px;
+
+    scrollbar-width: thin;
+    scrollbar-color: #00cfc3 #202832;
+}
+
+#analisis .math-card .formula{
+    font-size: clamp(1.15rem, 3.85cqw, 1.5rem);
+}
+
+.formula-scroll mjx-container[display = true]{
+    width: max-content !important;
+    max-width: none !important;
+    margin: 0 auto !important;
 }
 
 .formula{
+    width: max-content;
+    min-width: 100%;
     text-align: center;
     font-size: 1.2rem;
-    margin: 15px 0;
+    margin: 0;
+
     background: linear-gradient(90deg, #00d4ff, #00cfc3, #36e878);
     -webkit-background-clip: text;
     background-clip: text;
@@ -412,19 +577,65 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
     font-weight: bold;
 }
 
+/* ---------------------------- PERSONALIZACIÓN SCROLLBAR ------------------------*/
+
+/* Para navegadores de Chrome, Edge y Safari */
+.formula-scroll::-webkit-scrollbar, .table-scroll::-webkit-scrollbar{
+    height: 7px;
+}
+
+/* Para navegadores de Firefox */
+.formula-scroll, .table-scroll{
+    scrollbar-width: thin;
+    scrollbar-color: #00cfc3 #202832;
+}
+
+.formula-scroll::-webkit-scrollbar-track, .table-scroll::-webkit-scrollbar-track{
+    background: #202832;
+    border-radius: 10px;
+}
+
+.formula-scroll::-webkit-scrollbar-thumb, .table-scroll::-webkit-scrollbar-thumb{
+    background: linear-gradient(90deg, #00d4ff, #00cfc3);
+    border-radius: 10px;
+    border: 1px solid #202832;
+}
+
+.formula-scroll::-webkit-scrollbar-thumb:hover, .table-scroll::-webkit-scrollbar-thumb:hover{
+    background: #36e878;
+}
+
+
 .vlan-grid{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
     gap: 15px;
     margin-top: 20px;
+    width: 100%;
+    min-width: 0;
 }
 
 .vlan-card{
-    flex: 1;
+    min-width: 0;
+    width: 100%;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
     position: relative;
     background-color: #1f242c;
     padding: 15px;
     border-radius: 6px;
+}
+
+.vlan-card h4{
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    overflow-wrap: break-word;
+    margin-bottom: 10px;
+}
+
+.vlan-card p, .recommendation-box p{
+    font-size: .95rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
 }
 
 .vlan-card::before{
@@ -436,11 +647,6 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
     border-radius: 15px 15px 0 0;
     top: 0;
     left: 0;
-}
-
-.vlan-card h4{
-    font-size: 1.2rem;
-    margin-bottom: 10px;
 }
 
 .method-badge{
@@ -456,16 +662,45 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
 
 @media (max-width: 850px) {
 
+
+    .main-content{
+        padding: 18px;
+    }
+
+    .metric-grid{
+        gap: 12px;
+    }
+
+    .metric-value{
+        font-size: clamp(1.65rem, 1.5vw, 2rem);
+    }
+
+    .chart-container{
+        padding: 14px;
+    }
+
+    /* Botón abrir configuración */
     .bi-box-arrow-right{
         display: inline-flex;
     }
 
+    /* Panel lateral responsive */
     .sidebar{
         position: fixed;
         top: 0;
         left: 0;
+
+        width: min(320px, 88vw);
+        max-width: 100%;
         height: 100vh;
+        height: 100dvh;
+
         margin-left: 0;
+        padding: 20px;
+
+        overflow-y: auto;
+        overflow-x: hidden;
+
         transform: translateX(-100%);
         box-shadow: 4px 0 15px rgba(0, 0, 0, 0.5);
     }
@@ -474,8 +709,183 @@ body.sidebar-is-collapsed .bi-box-arrow-right{
         transform: translateX(0);
     }
 
+    .sidebar-overlay.active{
+        display: block;
+        opacity: 1;
+    }
+
+    .sidebar-overlay{
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        z-index: 90;
+    }
+
     .main-content{
+        width: 100%;
+        min-width: 0;
         padding: 18px;
+    }
+
+    .sidebar .form-group{
+        width: 100%;
+        min-width: 0;
+    }
+
+    .sidebar input, .sidebar select{
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .sidebar input[type="file"]{
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .sidebar select{
+        font-size: 13px;
+        text-overflow: ellipsis;
+    }
+
+    .sidebar .info-box{
+        overflow-wrap: anywhere;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .tabs-nav{
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .tab-link{
+        width: 100%;
+        padding: 11px 6px;
+        font-size: .82rem;
+        text-align: center;
+    }
+
+    #analisis h2{
+        font-size: 1.25rem;
+        line-height: 1.4;
+    }
+
+    #analisis .math-card{
+        padding: 14px;
+    }
+
+    #analisis .math-card h3{
+        font-size: 1.05rem;
+    }
+
+    #analisis .math-card p{
+        font-size: .9rem;
+        line-height: 1.6;
+    }
+
+    .formula-scroll{
+        padding: 10px 6px;
+    }
+
+    #analisis .data-table th, #analisis .data-table td{
+        padding: 10px;
+        font-size: .85rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .main-content{
+        padding: 12px;
+    }
+
+    .header h1{
+        font-size: 1.3rem;
+    }
+
+    .header p{
+        font-size: .85rem;
+        line-height: 1.5;
+    }
+
+    .metric-grid{
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .metric-card{
+        padding: 16px;
+    }
+
+    .chart-container{
+        padding: 10px;
+    }
+    
+    .chart-box{
+        height: clamp(300px, 85vw, 380px);
+    }
+
+    .recommendation-box{
+        padding: 15px;
+    }
+
+    .vlan-card{
+        padding: 14px;
+    }
+
+    .sidebar{
+        width: 90vw;
+        padding: 18px;
+    }
+
+    .sidebar h2{
+        font-size: 21px;
+    }
+
+    .sidebar-header{
+        margin-bottom: 30px;
+    }
+    
+    .form-group label{
+        font-size: 13px;
+    }
+
+    .sidebar .info-box{
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .main-content{
+        padding: 12px;
+    }    
+
+    .cont-proyecto-name img{
+        width: clamp(90px, 20vw, 200px);
+    }
+
+    .header h1{
+        font-size: 1.5rem;
+        margin-bottom: 3px;
+    }
+
+}
+
+@media (max-width: 390px){
+    .metric-grid{
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    }
+
+    .vlan-grid{
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    }
+
+    .tab-panel h2{
+        font-size: 1.3rem;
     }
 
 }

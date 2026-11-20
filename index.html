@@ -65,8 +65,8 @@
             <div class="header-top">
                 <i id="toggleSidebarMain" class="bi bi-box-arrow-right" title="Mostrar configuración"></i>
                 <div class="cont-proyecto-name">
-                <img src="Assets/images/logos/logoSolsoftSAS.svg" alt="Logo SolSoft S.A.S." width="110" height="80">
-                <h1>Sol<span class="degrade">Soft</span> S.A.S. Network Analytics</h1>
+                    <img src="Assets/images/logos/logoSolsoftSAS.svg" alt="Logo SolSoft S.A.S." width="110" height="80">
+                    <h1>Sol<span class="degrade">Soft</span> S.A.S. Network Analytics</h1>
                 </div>
             </div>
             <p>Aplicación empresarial de cálculo integral para el consumo de ancho de banda y análisis de horas críticas de colapso en la red empresarial.</p>
@@ -115,50 +115,59 @@
             </div>
 
             <div class="chart-container">
-                <h3>Tráfico actual vs Optimizado con VLANs: $D(t)$ y Área Bajo la curva (jornada de 10 horas)</h3>
-                <canvas id="trafficChart"></canvas>
+                <div class="chart-box">
+                    <canvas id="trafficChart"></canvas>
+                </div>
             </div>
         </section>
 
         <!-- PESTAÑA 2: ANÁLISIS INTEGRAL -->
          <section id="analisis" class="tab-panel">
             <h2>Comparación de Método Matemáticos de Integrales</h2>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Método Númerico / Análitico</th>
-                        <th>Volumen Diario (MB)</th>
-                        <th>Proyección Mensual</th>
-                        <th>Diferencia Relativa</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr id="rowTfc">
-                        <td>Teorema Fundamental del Cálculo / Trapecios</td>
-                        <td id="valTfc">1,054.69 MB</td>
-                        <td id="valTfcMes">22.66 GB</td>
-                        <td>0.00% (Base)</td>
-                    </tr>
-                    <tr id="rowRiemann">
-                        <td>Sumas de Riemman (Punto Medio, $n=5$)</td>
-                        <td id="valRiemann">1,072.26 MB</td>
-                        <td id="valRiemannMes">23.05 GB</td>
-                        <td id="difRiemann">+1.66%</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Método Númerico / Análitico</th>
+                            <th>Volumen Diario (MB)</th>
+                            <th>Proyección Mensual</th>
+                            <th>Diferencia Relativa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="rowTfc">
+                            <td>Teorema Fundamental del Cálculo / Trapecios</td>
+                            <td id="valTfc">1,054.69 MB</td>
+                            <td id="valTfcMes">22.66 GB</td>
+                            <td>0.00% (Base)</td>
+                        </tr>
+                        <tr id="rowRiemann">
+                            <td>Sumas de Riemman (Punto Medio, $n=5$)</td>
+                            <td id="valRiemann">1,072.26 MB</td>
+                            <td id="valRiemannMes">23.05 GB</td>
+                            <td id="difRiemann">+1.66%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
             <div class="math-card">
                 <h3>Interpretación Mátematica del Problema</h3>
                 <p>El volumen diario acumulado $V_{\text{diario}}$ equivale a la integral definida de la función de velocidad $D(t)$ [en $\text{KB/s}$] multiplicada por 3600 segundos:</p>
-                <p class="formula">$$V_{\text{diario (KB)}} = 3600 \cdot \int_{0}^{10} \left( -0.5t^3 + 6t^2 - 12t + 15 \right) dt$$</p>
+                <div class="formula-scroll">
+                    <p class="formula">$$V_{\text{diario (KB)}} = 3600 \cdot \int_{0}^{10} \left( -0.5t^3 + 6t^2 - 12t + 15 \right) dt$$</p>
+                </div>
                 <p>Para estimar el consumo acumulado en un mes laboral comercial de 22 días hábiles:</p>
-                <p class="formula">$$V_{\text{mensual (GB)}} = \frac{V_{\text{diario (KB)}} \times 22}{1024} \approx 22.66 \text{GB/mes}$$</p>
+                <div class="formula-scroll">
+                    <p class="formula">$$V_{\text{mensual (GB)}} = \frac{V_{\text{diario (KB)}} \times 22}{1024} \approx 22.66 \text{GB/mes}$$</p>
+                </div>
             </div>
 
             
             <div class="chart-container chart-acumulado">
-                <canvas id="accumChart"></canvas>
+                <div class="chart-box">
+                    <canvas id="accumChart"></canvas>
+                </div>
             </div>
          </section>
 

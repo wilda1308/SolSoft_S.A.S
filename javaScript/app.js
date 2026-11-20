@@ -108,6 +108,17 @@ function setupSidebarToggle(){
         }
     }
 
+    //Si la pantalla pasa a modo escritorio (ej: 'Sitios para ordenadores o girar el Equipo), se limpia el estado móvil para que no quede el fondo oscuro / blur pegado.
+    const modoMovil = window.matchMedia ('(max-width: 850px)');
+
+    function limpiarEstadoMovil(e){
+        overlay.classList.remove('active');
+        sidebar.classList.remove('mobile-open');
+    }
+
+    if(modoMovil.addEventListener) modoMovil.addEventListener('change', limpiarEstadoMovil);
+    else modoMovil.addEventListener(limpiarEstadoMovil);
+
     if(closeBtn) closeBtn.addEventListener('click', hideSidebar);
     if(mainToggleBtn) mainToggleBtn.addEventListener('click', showSidebar);
     if(overlay) overlay.addEventListener('click', hideSidebar);
@@ -145,6 +156,24 @@ document.getElementById('csvFileInput').addEventListener('change', function(e){
     reader.readAsText(file);
 });
 
+//Validar que los intervalos de tiempo sean continuos y uniformes
+function tieneIntervalosUniformes(horas){
+    if(horas.length < 2) return false;
+
+    const intervaloBase = horas[1] - horas[0];
+
+    if(intervaloBase <= 0) return false;
+
+    for(let i = 1; i < horas.length - 1; i++){
+        const intervaloActual = horas[i + 1] - horas[i];
+
+        if(Math.abs(intervaloActual - intervaloBase) > 0.000001){
+            return false;
+        }
+    }
+
+    return true
+}
 
 function procesarCSV(csvText){
     const lines = csvText.trim().split('\n');
@@ -163,6 +192,18 @@ function procesarCSV(csvText){
                 tasas.push(t);
             }
         }
+    }
+
+    // Validar cantidad minima de registros
+    if(horas.length < 2){
+        alert('El archivo debe contener al menos dos registros válidos.');
+        return;
+    }
+
+    // Validar intervalos de tiempo
+    if(!tieneIntervalosUniformes(horas)){
+        alert('Los intervalos de tiempo deben ser uniformes y estar ordenados para utilizar el método de Riemann.');
+        return;
     }
 
     renderTablaDatos(horas, tasas);
@@ -267,7 +308,7 @@ function renderTablaDatos(horas, tasas){
         const mbps = (tasas[i]*8) / 1000;
         tableHtml += `
             <tr>
-                <td>Hora ${horas[i]}</td>
+                <td><strong>${horas[i]}</strong></td>
                 <td>${tasas[i].toFixed(2)} KB/s</td>
                 <td>${mbps.toFixed(3)} Mbps</td>
             </tr>`;
@@ -279,6 +320,32 @@ function renderTablaDatos(horas, tasas){
 
 function colorOptimizado(reduccion){
     return reduccion <= 0.2? '#FF4B4B' : '#42FF42';
+}
+
+function esMovil(){
+    return window.matchMedia('(max-width: 600px)').matches;
+}
+
+function opcionesLeyenda(){
+    const m = esMovil();
+    return{
+        position: m ? 'bottom' : 'top',
+        labels: {
+            color: '#ffffff',
+            boxWidth: m ? 22 : 40,
+            boxHeight: m ? 8 : 12,
+            padding: m ? 10 : 14,
+            font: { size: m ? 11 : 12 }
+        }
+    };
+}
+
+function fuenteEjes(){
+    return { size: esMovil() ? 10: 12};
+}
+
+function tituloEje(texto){
+    return { display: true, text: texto, color: '#8b949e', font: fuenteEjes()};
 }
 
 function renderChart(labels, tasasAjustadas, data, reduccion){
@@ -310,7 +377,7 @@ function renderChart(labels, tasasAjustadas, data, reduccion){
                     borderColor: '#0062FF',
                     backgroundColor: 'rgba(0, 98, 255, 0.25)',
                     borderWidth: 3,
-                    pointRadius: 4,
+                    pointRadius: esMovil() ? 2.5 : 4,
                     tension: 0.3, 
                     pointBackgroundColor: '#0062FF'
                 }
@@ -318,16 +385,38 @@ function renderChart(labels, tasasAjustadas, data, reduccion){
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
+            layout: { padding: { right: esMovil() ? 6 : 0}},
             plugins:{
-                legend:{labels:{color: '#ffffff'}}
-            },
+                legend: opcionesLeyenda(),
+                title:{ 
+                    display: true, 
+                    text: 'Tráfico Actual vs Optimizado con VLANs', 
+                    color: '#FFF', 
+                    font: {size: esMovil() ? 14 : 16}},
+                subtitle: {
+                    display: true, 
+                    text: 'D(t) y Área Bajo la curva (jornada de 10 horas)', 
+                    color: '#8b949e', 
+                    font: { size: esMovil() ? 11 : 12 }, 
+                    padding: {bottom: 12}}},
             scales:{
                 x: {
-                    ticks: {color:'#8b949e'}, grid: {color: '#30363d'}, 
-                    title: {display: true, text: 'Tiempo (Horas)', color: '#8b949e'}},
+                    ticks: {
+                        color:'#8b949e',
+                        font: fuenteEjes(),
+                        maxRotation: 0,
+                        autoSkip: true},
+                    grid: {color: '#30363d'}, 
+                    title: tituloEje('Tiempo (Horas)')},
                 y: {
-                    ticks: {color: '#8b949e'},grid: {color: '#30363d'}, 
-                    title: {display: true, text: 'Tasa de consumo (KB/s)', color: '#8b949e'}}
+                    ticks: {
+                        color: '#8b949e',
+                        font: fuenteEjes(),
+                        maxRotation: 0, 
+                        autoSkip: true},
+                    grid: {color: '#30363d'}, 
+                    title: tituloEje('Tasa de consumo (KB/s)')}
             }
         }
     });
@@ -367,7 +456,7 @@ function renderChartAcumulado(horas, tasas, tasasOpt, reduccion){
             backgroundColor: 'rgba(0, 98, 255, 0.18)',
             fill: true,
             borderWidth: 3,
-            pointRadius: 3,
+            pointRadius: esMovil() ? 2 : 3,
             pointBackgroundColor: '#0062FF',
             tension: 0.25
         },
@@ -384,11 +473,19 @@ function renderChartAcumulado(horas, tasas, tasasOpt, reduccion){
     ]},
         options: {
             responsive: true,
-            aspectRatio: window.innerWidth < 600 ? 1.3 : 2.6,
+            maintainAspectRatio: false,
             plugins: {
-                legend: { labels: { color: '#ffffff'}},
-                title: { display: true, text: 'Volumen Acumulado (Megabytes)', color: "#FFF", font: { size: 16}},
-                subtitle: {display: true, text: `Total de la jornada: ${total.toFixed(2)} MB actual · ${totalOpt.toFixed(2)} MB optimizado`, color: '#8b949e'},
+                legend: opcionesLeyenda(),
+                title: { 
+                    display: true, 
+                    text: 'Volumen Acumulado (Megabytes)', 
+                    color: "#FFF", 
+                    font: { size: esMovil() ? 14 : 16}},
+                subtitle: {
+                    display: true, 
+                    text: esMovil() ? [`Total: ${total.toFixed(2)} MB actual`, `${totalOpt.toFixed(2)} MB optimizado`] : [`Total de la jornada: ${total.toFixed(2)} MB actual · ${totalOpt.toFixed(2)} MB optimizado`], 
+                    color: '#8b949e',
+                    font: { size: esMovil() ? 11 : 12}},
                 tooltip: { callbacks: {
                     title: items => `Hora ${items[0].parsed.x}`,
                     label: item => `${item.parsed.y.toFixed(2)} MB acumulados`
@@ -399,23 +496,32 @@ function renderChartAcumulado(horas, tasas, tasasOpt, reduccion){
                     type: 'linear', 
                     min: horas[0], 
                     max: horas[horas.length - 1],
-                    title: {
-                        display: true, text: 'Tiempo (Horas)', 
-                        color: '#8b949e'},
+                    title: tituloEje('Tiempo (Horas)'),
                     ticks: { 
                         color: '#8b949e', 
-                        stepSize: 1}, 
+                        font: fuenteEjes,
+                        stepSize: 1},
                     grid: { color: '#30363d'}},
                 y: {
                     beginAtZero: true,
-                    title: {
-                        display: true, 
-                        text: 'Tráfico Acumulado (MB)', 
-                        color: '#8b949e'},
+                    title: tituloEje('Tráfico Acumulado (MB)'),
                     ticks: { 
-                        color: '#8b949e'}, 
-                    grid: { color:'#30363d'}}
+                        color: '#8b949e',
+                        font: fuenteEjes(),
+                        maxTicksLimit: esMovil() ? 6 : 8}, 
+                    grid: { color:'#30363d'}
+                }
             }
         }
     });
 }
+
+let ultimoEsMovil = esMovil();
+window.addEventListener('resize', function(){
+    if(esMovil() !== ultimoEsMovil){
+        ultimoEsMovil = esMovil();
+        if(currentHoras.length){
+            calcularYActualizar(currentHoras, currentTasas);
+        }
+    }
+})
