@@ -76,6 +76,8 @@ function integrarRiemannMedio(horas, tasas){
         suma += tasas[i + 1] * (horas[i + 2] - horas[i]);
         i += 2;
     }
+
+    //Si sobra un intervalo, se completa con trapecio
     if(i + 1 < horas.length){
         suma += ((tasas[i] + tasas[i + 1]) / 2) * (horas[i + 1] - horas[i]);
     }
